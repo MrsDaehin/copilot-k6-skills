@@ -29,6 +29,12 @@ Helps you navigate and apply the official Grafana k6 documentation, including co
   - https://grafana.com/docs/k6/latest/javascript-api/k6-http/
   - https://grafana.com/docs/k6/latest/examples/
 
+### k6-html-report
+Adds a custom HTML summary report to a k6 test script using `k6-reporter` and `k6-summary`.
+
+- **Location**: `.github/skills/k6-html-report/`
+- **Example**: See `examples/custom-summary.js`
+
 ## How to Use in Your Repo
 
 1. Add this repo as a submodule:

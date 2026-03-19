@@ -14,6 +14,12 @@ Generates JSON configuration files for k6 performance tests based on test type (
 - **Location**: `.github/skills/k6-config-generator/`
 - **Examples**: See `examples/` folder for sample configs
 
+### k6-auth-generators
+Generates authentication helper files for k6 tests, including JWT token generator and HMAC signature calculator.
+
+- **Location**: `.github/skills/k6-auth-generators/`
+- **Templates**: See `templates/` folder for the source files
+
 ## How to Use in Your Repo
 
 1. Add this repo as a submodule:

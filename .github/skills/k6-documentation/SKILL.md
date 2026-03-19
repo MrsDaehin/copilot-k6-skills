@@ -23,6 +23,14 @@ This skill helps users navigate and apply the official Grafana k6 documentation 
 2. **Map to documentation**: Point to the exact section(s) in the Grafana k6 documentation and optionally provide a short, practical snippet.
 3. **Provide next steps**: Suggest concrete actions (e.g., “Use `http.get()` in a default function”, or “Define a `thresholds` object in your options”).
 
+## Examples
+This skill includes a small set of example k6 scripts (mirroring the official examples) to help you get started quickly.
+
+- `examples/get-started-with-k6.js`
+- `examples/single-request.js`
+- `examples/http-authentication.js`
+- `examples/data-parameterization.js`
+
 ## Usage
 Ask anything like:
 - "How do I set a custom metric in k6?"

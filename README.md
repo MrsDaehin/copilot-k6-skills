@@ -35,6 +35,12 @@ Adds a custom HTML summary report to a k6 test script using `k6-reporter` and `k
 - **Location**: `.github/skills/k6-html-report/`
 - **Example**: See `examples/custom-summary.js`
 
+### k6-boilerplate-generator
+Generates a complete k6 performance test project boilerplate from an OpenAPI specification. Creates a production-ready folder structure with configuration files, test templates, shared utilities, and data generation tools.
+
+- **Location**: `.github/skills/k6-boilerplate-generator/`
+- **Example**: See `examples/Petstore.k6.Performance/` for a complete generated project based on the Swagger Petstore API
+
 ## How to Use in Your Repo
 
 1. Add this repo as a submodule:

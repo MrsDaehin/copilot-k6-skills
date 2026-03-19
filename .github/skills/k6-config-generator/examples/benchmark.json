@@ -1,0 +1,13 @@
+{
+  "scenarios": {
+    "benchmark": {
+      "executor": "constant-arrival-rate",
+      "exec": "default",
+      "rate": 200,
+      "timeUnit": "1s",
+      "preAllocatedVUs": 1,
+      "maxVUs": 500,
+      "duration": "30m"
+    }
+  }
+}

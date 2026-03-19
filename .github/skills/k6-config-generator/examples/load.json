@@ -1,0 +1,26 @@
+{
+  "scenarios": {
+    "load": {
+      "executor": "ramping-arrival-rate",
+      "exec": "default",
+      "startRate": 1,
+      "timeUnit": "1s",
+      "preAllocatedVUs": 1,
+      "maxVUs": 100,
+      "stages": [
+        {
+          "target": 50,
+          "duration": "30s"
+        },
+        {
+          "target": 50,
+          "duration": "5m"
+        }
+      ]
+    }
+  },
+  "thresholds": {
+    "http_req_duration": ["p(95)<1000"],
+    "http_req_failed": ["rate<0.1"]
+  }
+}

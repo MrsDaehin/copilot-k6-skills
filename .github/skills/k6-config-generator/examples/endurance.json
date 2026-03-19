@@ -1,0 +1,25 @@
+{
+    "scenarios": {
+        "endurance": {
+            "executor": "ramping-arrival-rate",
+            "startRate": 2000,
+            "timeUnit": "1m",
+            "preAllocatedVUs": 1000,
+            "maxVUs": 4000,
+            "stages": [
+                {
+                    "target": 32000,
+                    "duration": "10m"
+                },
+                {
+                    "target": 32000,
+                    "duration": "40m"
+                },
+                {
+                    "target": 0,
+                    "duration": "10m"
+                }
+            ]
+        }
+    }
+}

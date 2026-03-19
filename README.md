@@ -20,6 +20,15 @@ Generates authentication helper files for k6 tests, including JWT token generato
 - **Location**: `.github/skills/k6-auth-generators/`
 - **Templates**: See `templates/` folder for the source files
 
+### k6-documentation
+Helps you navigate and apply the official Grafana k6 documentation, including core concepts, the JavaScript HTTP API, and example patterns.
+
+- **Location**: `.github/skills/k6-documentation/`
+- **Sources**:
+  - https://grafana.com/docs/k6/latest/
+  - https://grafana.com/docs/k6/latest/javascript-api/k6-http/
+  - https://grafana.com/docs/k6/latest/examples/
+
 ## How to Use in Your Repo
 
 1. Add this repo as a submodule:

@@ -1,0 +1,24 @@
+{
+  "scenarios": {
+    "ramp_up_test": {
+      "executor": "ramping-arrival-rate",
+      "startRate": 1,
+      "timeUnit": "1s",
+      "stages": [
+        { "duration": "1m", "target": 5 },
+        { "duration": "2m", "target": 10 },
+        { "duration": "2m", "target": 20 },
+        { "duration": "2m", "target": 50 },
+        { "duration": "2m", "target": 100 },
+        { "duration": "5m", "target": 100 }
+      ],
+      "preAllocatedVUs": 10,
+      "maxVUs": 200
+    }
+  },
+  "thresholds": {
+    "http_req_duration": ["p(95)<1500"],
+    "http_req_failed": ["rate<0.1"],
+    "http_req_duration{status:200}": ["p(95)<1200"]
+  }
+}

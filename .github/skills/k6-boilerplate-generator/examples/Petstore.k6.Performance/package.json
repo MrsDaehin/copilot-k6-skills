@@ -1,0 +1,41 @@
+{
+  "name": "petstore-k6-performance-tests",
+  "version": "1.0.0",
+  "description": "Performance testing suite for the Swagger Petstore API using k6",
+  "main": "index.js",
+  "scripts": {
+    "generate-data": "node tools/dataGenerator/generatePets.js && node tools/dataGenerator/generateUsers.js && node tools/dataGenerator/generateOrders.js",
+    "generate-pets": "node tools/dataGenerator/generatePets.js",
+    "generate-users": "node tools/dataGenerator/generateUsers.js",
+    "generate-orders": "node tools/dataGenerator/generateOrders.js",
+    "test-local": "make test-local",
+    "test-constant": "make test-constant",
+    "test-ramp": "make test-ramp",
+    "test-spike": "make test-spike",
+    "test-soak": "make test-soak",
+    "report": "make report",
+    "clean": "make clean"
+  },
+  "keywords": [
+    "k6",
+    "performance-testing",
+    "petstore",
+    "openapi",
+    "load-testing"
+  ],
+  "author": "Performance Testing Team",
+  "license": "Apache-2.0",
+  "dependencies": {},
+  "devDependencies": {},
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-org/petstore-k6-performance.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-org/petstore-k6-performance/issues"
+  },
+  "homepage": "https://github.com/your-org/petstore-k6-performance#readme"
+}

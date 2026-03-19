@@ -1,0 +1,17 @@
+{
+  "scenarios": {
+    "constant_load_20_rps": {
+      "executor": "constant-arrival-rate",
+      "rate": 20,
+      "timeUnit": "1s",
+      "duration": "10m",
+      "preAllocatedVUs": 5,
+      "maxVUs": 50
+    }
+  },
+  "thresholds": {
+    "http_req_duration": ["p(95)<1000"],
+    "http_req_failed": ["rate<0.1"],
+    "http_req_duration{status:200}": ["p(95)<800"]
+  }
+}

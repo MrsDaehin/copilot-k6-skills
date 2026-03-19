@@ -1,0 +1,23 @@
+{
+  "scenarios": {
+    "spike_test": {
+      "executor": "ramping-arrival-rate",
+      "startRate": 1,
+      "timeUnit": "1s",
+      "stages": [
+        { "duration": "30s", "target": 10 },
+        { "duration": "30s", "target": 100 },
+        { "duration": "1m", "target": 1000 },
+        { "duration": "30s", "target": 10 },
+        { "duration": "1m", "target": 10 }
+      ],
+      "preAllocatedVUs": 20,
+      "maxVUs": 1000
+    }
+  },
+  "thresholds": {
+    "http_req_duration": ["p(95)<3000"],
+    "http_req_failed": ["rate<0.2"],
+    "http_req_duration{status:200}": ["p(95)<2500"]
+  }
+}

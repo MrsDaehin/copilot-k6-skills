@@ -59,44 +59,104 @@ Make sure you can sign in before the workshop.
 
 ---
 
-## 4. AI coding assistant
+## 4. AI coding assistant with Agent Skills and MCP support
 
 You need access to an **AI coding assistant that can work with your source code**.
 
-### Recommended
+This workshop is designed around two complementary ideas:
 
-**GitHub Copilot** is recommended because part of the workshop focuses specifically on creating and using **Copilot / Agent Skills** stored in the repository.
+- **Agent Skills** — reusable instructions, examples, templates, and project knowledge stored in `SKILL.md` files.
+- **MCP (Model Context Protocol)** — external tools that give the assistant access to capabilities such as k6 execution and Grafana observability data.
 
-Recommended environment:
+The workshop is **not tied to a single AI vendor**. You can follow the concepts with different coding agents, although the exact Skills directory and MCP configuration will vary.
 
-- Visual Studio Code
-- GitHub Copilot extension
-- Copilot Chat / Agent mode enabled
+### Recommended options
 
-https://code.visualstudio.com/
+#### GitHub Copilot
+
+GitHub Copilot is a good choice if you already use VS Code and want to work with repository-level Agent Skills.
+
+A typical project structure is:
+
+```text
+.github/
+└── skills/
+    └── k6-load-test/
+        └── SKILL.md
+```
 
 https://github.com/features/copilot
 
+#### OpenCode
+
+OpenCode supports reusable Agent Skills through `SKILL.md`.
+
+Project-local skills can be stored under:
+
+```text
+.opencode/
+└── skills/
+    └── k6-load-test/
+        └── SKILL.md
+```
+
+OpenCode can also discover compatible skills from:
+
+```text
+.claude/skills/
+.agents/skills/
+```
+
+Documentation:
+
+https://opencode.ai/docs/skills
+
+#### Qwen Code + Qwen3-Coder
+
+Qwen Code supports Agent Skills and can be used with Qwen coding models such as Qwen3-Coder.
+
+Project skills are stored under:
+
+```text
+.qwen/
+└── skills/
+    └── k6-load-test/
+        └── SKILL.md
+```
+
+Qwen Code can automatically select a Skill when relevant, and user-invocable Skills can also be run explicitly using:
+
+```text
+/<skill-name>
+```
+
+Documentation:
+
+https://qwenlm.github.io/qwen-code-docs/en/users/features/skills/
+
 ### Other possible AI assistants
 
-You can also experiment with MCP using clients such as:
+You can also use MCP-capable assistants such as:
 
 - Claude Code
 - Claude Desktop
 - Cursor
 - OpenAI Codex CLI
-- Other MCP-compatible coding assistants
+- Other coding agents that support MCP
 
-> **Important:** The Skills exercises will use the GitHub Copilot Agent Skills structure. Other assistants may use different formats for reusable instructions or skills. If you want to follow the tutorial exactly, use GitHub Copilot.
+Some of these tools may use their own conventions for reusable instructions or Agent Skills.
+
+> **Important:** The workshop will focus on the portable concept of **Agent Skills**, not on one vendor-specific implementation. Where useful, examples will show how the same k6 knowledge can be exposed to different agents.
 
 ### Verify
 
-Before the workshop, open your AI assistant and confirm that you can:
+Before the workshop, open your chosen AI assistant and confirm that you can:
 
 1. Open a local repository.
 2. Ask the assistant questions about files in that repository.
 3. Use its agent or coding mode.
 4. Configure MCP servers.
+5. Load or invoke a repository-level Skill, if your assistant supports Agent Skills.
 
 ---
 
@@ -288,9 +348,59 @@ The instructor may provide a shared or temporary Grafana environment for the exe
 
 Before the workshop, make sure you can clone repositories from GitHub.
 
-The exercises will use a repository following the same approach as:
+The exercises will use a repository inspired by:
 
 https://github.com/MrsDaehin/copilot-k6-skills
+
+The repository contains reusable performance-engineering knowledge that can be exposed to different coding agents.
+
+A portable source layout could look like:
+
+```text
+skills/
+├── k6-config-generator/
+│   └── SKILL.md
+├── k6-auth-generator/
+│   └── SKILL.md
+├── k6-documentation/
+│   └── SKILL.md
+├── k6-html-report/
+│   └── SKILL.md
+└── k6-boilerplate-generator/
+    └── SKILL.md
+```
+
+Depending on the assistant, those Skills can then be placed or synchronized into the appropriate project directory:
+
+```text
+.github/skills/     # GitHub Copilot
+.opencode/skills/   # OpenCode
+.qwen/skills/       # Qwen Code
+.claude/skills/     # Claude-compatible agents
+.agents/skills/     # Portable/shared convention supported by some agents
+```
+
+The important idea is:
+
+```text
+Performance Engineering Knowledge
+              |
+              v
+          SKILL.md
+              |
+      +-------+-------+
+      |       |       |
+   Copilot  OpenCode  Qwen Code
+      |       |       |
+      +-------+-------+
+              |
+              v
+        MCP capabilities
+```
+
+The **valuable asset is the engineering knowledge encoded in the Skill**, not the specific AI assistant used to consume it.
+
+During the tutorial we will inspect existing k6 Skills, create or modify one ourselves, and use it together with MCP tools.
 
 Example:
 
@@ -299,62 +409,104 @@ git clone <WORKSHOP_REPOSITORY_URL>
 cd <WORKSHOP_REPOSITORY>
 ```
 
-The repository will contain examples of reusable AI skills for k6, such as:
-
-```text
-.github/
-└── skills/
-    ├── k6-config-generator/
-    │   └── SKILL.md
-    ├── k6-auth-generators/
-    │   └── SKILL.md
-    ├── k6-documentation/
-    │   └── SKILL.md
-    ├── k6-html-report/
-    │   └── SKILL.md
-    └── k6-boilerplate-generator/
-        └── SKILL.md
-```
-
-During the tutorial we will examine this structure and create or modify a skill ourselves.
-
 ---
 
 ## 11. MCP support in your AI assistant
 
 Before the workshop, verify that your chosen AI assistant supports **Model Context Protocol servers**.
 
-We will configure two MCP servers:
+We will combine Agent Skills with two MCP servers:
 
 ```text
-AI Coding Assistant
-        |
-        +---- Copilot / Agent Skills
-        |
-        +---- mcp-k6
-        |       |
-        |       +---- k6 documentation
-        |       +---- script validation
-        |       +---- local test execution
-        |
-        +---- mcp-grafana
-                |
-                +---- Grafana
-                +---- dashboards
-                +---- metrics / observability context
+                 AI Coding Assistant
+                        |
+              +---------+---------+
+              |                   |
+         Agent Skills             MCP
+              |                   |
+   k6 conventions,          +-----+------+
+   templates, examples      |            |
+                            v            v
+                         mcp-k6     mcp-grafana
+                            |            |
+                      validate/run   dashboards/
+                      k6 tests       observability
 ```
 
-The exact MCP configuration format depends on the client you use.
+The exact configuration depends on the client you use.
 
-Examples of clients with MCP support include:
+Examples of clients that can be used in the workshop include:
 
 - GitHub Copilot / VS Code
+- OpenCode
+- Qwen Code
 - Claude Code
 - Claude Desktop
 - Cursor
 - Codex CLI
 
-Check your client's current documentation before the workshop because MCP configuration can evolve quickly.
+### Skills and MCP are different
+
+This distinction is important:
+
+**Agent Skills** teach the assistant **how your team works**.
+
+Examples:
+
+- How your k6 projects are structured.
+- Which thresholds you normally use.
+- How authentication helpers should be created.
+- How workload models should be defined.
+- Which reusable templates or conventions your team follows.
+
+**MCP servers** give the assistant **tools and external capabilities**.
+
+For example:
+
+```text
+Skill:
+"Build k6 projects using our workload / scenario / behaviour architecture."
+
+mcp-k6:
+"Validate this script."
+"Run this test with 10 VUs."
+"Find the official documentation for scenarios."
+
+mcp-grafana:
+"Find the relevant dashboard."
+"Inspect telemetry during the test."
+"Help correlate a latency increase with application metrics."
+```
+
+Together, they create the feedback loop we want to demonstrate:
+
+```text
+Requirements
+     |
+     v
+Agent Skill
+     |
+     v
+Generate k6 test
+     |
+     v
+mcp-k6 validate
+     |
+     +---- error ----> AI fixes test ----+
+     |                                   |
+     +-----------------------------------+
+     |
+     v
+Run performance test
+     |
+     v
+mcp-grafana
+     |
+     v
+Investigate system behaviour
+```
+
+Check your client's current documentation before the workshop because MCP and Agent Skills support evolves quickly.
 
 ---
 
@@ -425,7 +577,8 @@ Please complete this checklist before arriving.
 - [ ] I have an AI coding assistant available.
 - [ ] My AI assistant can work with a local repository.
 - [ ] My AI assistant supports MCP, or I have installed an MCP-capable client.
-- [ ] If I want to follow the Skills exercises exactly, I have GitHub Copilot available.
+- [ ] I know where my chosen assistant stores project-level Agent Skills.
+- [ ] I can load or invoke a simple `SKILL.md` with my chosen assistant.
 - [ ] `k6 version` works.
 - [ ] I can execute a simple local k6 test.
 - [ ] `docker version` works, or I have chosen native installation alternatives.
@@ -464,9 +617,10 @@ Finally:
 1. Open the workshop repository in your editor.
 2. Open your AI coding assistant.
 3. Ask it to explain one file from the repository.
-4. Confirm that your MCP configuration can be edited.
+4. Confirm that it can discover or invoke a project Skill.
+5. Confirm that your MCP configuration can be edited.
 
-If all four steps work, you are ready.
+If all five steps work, you are ready.
 
 ---
 
@@ -476,9 +630,11 @@ If all four steps work, you are ready.
 - Install k6: https://grafana.com/docs/k6/latest/set-up/install-k6/
 - mcp-k6: https://github.com/grafana/mcp-k6
 - mcp-grafana: https://github.com/grafana/mcp-grafana
-- Copilot k6 Skills example: https://github.com/MrsDaehin/copilot-k6-skills
-- GitHub Copilot Agent Skills documentation: https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/add-skills
+- k6 Agent Skills example repository: https://github.com/MrsDaehin/copilot-k6-skills
+- GitHub Copilot Agent Skills: https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/add-skills
+- OpenCode Agent Skills: https://opencode.ai/docs/skills
+- Qwen Code Agent Skills: https://qwenlm.github.io/qwen-code-docs/en/users/features/skills/
 
 ---
 
-> **Tip:** Install and verify everything before the workshop. We want to spend our time teaching AI how to become a performance engineer — not teaching laptops how to find Docker.
+> **Tip:**** Install and verify everything before the workshop. We want to spend our time teaching AI how to become a performance engineer — not teaching laptops how to find Docker.

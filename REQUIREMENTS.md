@@ -5,7 +5,7 @@
 
 This document lists everything you should install or prepare **before the workshop** so we can spend the session building, testing, and experimenting instead of troubleshooting local environments.
 
-> **Recommended setup:** VS Code + GitHub Copilot + Git + k6 + Docker.
+> **Recommended setup:** VS Code + GitHub Copilot + Git + k6 + Docker + Make + Prometheus/Grafana stack.
 >
 > Other AI coding assistants can also be used for parts of the workshop, especially if they support the **Model Context Protocol (MCP)**.
 
@@ -222,6 +222,31 @@ k6 run smoke-test.js
 ```
 
 You should see a completed k6 execution and its metrics in the terminal.
+
+### Remote write output
+
+The workshop uses k6's **experimental Prometheus remote write** output to stream metrics to the local Prometheus instance. This requires the `--out` flag:
+
+```bash
+k6 run \
+  -o experimental-prometheus-rw \
+  -e PROMETHEUS_RW_SERVER_URL=http://localhost:9090/api/v1/write \
+  -e PROMETHEUS_RW_TREND_STATS=p(95),p(99),min,max \
+  smoke-test.js
+```
+
+Test remote write connectivity:
+
+```bash
+k6 run \
+  -o experimental-prometheus-rw \
+  -e PROMETHEUS_RW_SERVER_URL=http://localhost:9090/api/v1/write \
+  --duration 10s \
+  --vus 1 \
+  https://test.k6.io
+```
+
+Then open Grafana at http://localhost:3000 and check the **k6 Results** dashboard for incoming metrics.
 
 ---
 
@@ -510,7 +535,127 @@ Check your client's current documentation before the workshop because MCP and Ag
 
 ---
 
-## 12. Nice to have
+## 12. Make
+
+The workshop projects use **Make** to run common tasks such as test execution, report generation, and test data creation.
+
+### macOS
+
+```bash
+brew install make
+```
+
+### Windows
+
+Using Winget:
+
+```powershell
+winget install GnuWin32.Make
+```
+
+Or using Chocolatey:
+
+```powershell
+choco install make
+```
+
+### Ubuntu / Debian
+
+```bash
+sudo apt update && sudo apt install make
+```
+
+### Verify
+
+```bash
+make --version
+```
+
+---
+
+## 13. Prometheus and Grafana stack
+
+A local **Prometheus + Grafana** stack is required for the observability exercises. This stack receives k6 metrics via remote write and provides dashboards for validation.
+
+The stack is defined in the workshop repository at `workshop/stack/docker-compose.yml`:
+
+```text
+workshop/stack/
+├── docker-compose.yml
+├── prometheus/
+│   └── prometheus.yml
+└── grafana/
+    └── provisioning/
+        ├── datasources/
+        │   └── prometheus.yml
+        └── dashboards/
+            ├── dashboards.yml
+            └── k6-results.json
+```
+
+### Start the stack
+
+```bash
+cd workshop/stack
+docker-compose up -d
+```
+
+### Verify
+
+- **Grafana**: http://localhost:3000 (admin / admin)
+- **Prometheus**: http://localhost:9090
+
+```bash
+curl -s http://localhost:9090/-/healthy
+curl -s http://localhost:3000/api/health
+```
+
+### Stop the stack
+
+```bash
+cd workshop/stack
+docker-compose down
+```
+
+---
+
+## 14. Grafana service account token
+
+To connect the **mcp-grafana** server to your local Grafana instance, you need a **service account token**.
+
+### Create a service account token
+
+1. Open Grafana at http://localhost:3000.
+2. Sign in with admin / admin.
+3. Go to **Administration > Service accounts**.
+4. Click **Add service account**.
+5. Name it `workshop` (or any name you prefer).
+6. Set role to **Editor** or **Admin**.
+7. Click **Add**.
+8. Under **Tokens**, click **Add service account token**.
+9. Copy the token and store it securely.
+
+### Use the token
+
+Set these environment variables before starting your AI assistant:
+
+```bash
+export GRAFANA_URL=http://localhost:3000
+export GRAFANA_SERVICE_ACCOUNT_TOKEN=<your-token>
+```
+
+On Windows PowerShell:
+
+```powershell
+$env:GRAFANA_URL="http://localhost:3000"
+$env:GRAFANA_SERVICE_ACCOUNT_TOKEN="<your-token>"
+```
+
+> **Important:** Never commit tokens, API keys, or passwords to the repository.
+
+---
+
+## 15. Nice to have
 
 These tools are not mandatory but can make the exercises easier.
 
@@ -540,18 +685,18 @@ curl --version
 
 ### Node.js
 
-Not required for basic k6 usage, because k6 does not run scripts through Node.js.
-
-However, Node.js may be useful if you want to experiment with additional JavaScript tooling around the workshop repository.
+Required for running test data generators used in the workshop projects (e.g., `generatePets.js`, `generateUsers.js`).
 
 ```bash
 node --version
 npm --version
 ```
 
+Install from: https://nodejs.org/
+
 ---
 
-## 13. Knowledge prerequisites
+## 16. Knowledge prerequisites
 
 You do **not** need to be a k6 expert.
 
@@ -562,6 +707,7 @@ Basic familiarity with the following will help:
 - Performance-testing concepts such as virtual users, throughput, response time, and thresholds
 - Git
 - Command-line tools
+- Docker basics (pulling images, running containers, using Docker Compose)
 
 No previous MCP development experience is required.
 
@@ -581,9 +727,16 @@ Please complete this checklist before arriving.
 - [ ] I can load or invoke a simple `SKILL.md` with my chosen assistant.
 - [ ] `k6 version` works.
 - [ ] I can execute a simple local k6 test.
+- [ ] My k6 installation supports the `experimental-prometheus-rw` output.
 - [ ] `docker version` works, or I have chosen native installation alternatives.
 - [ ] I have installed or pulled `grafana/mcp-k6`.
 - [ ] I have installed or pulled `grafana/mcp-grafana`.
+- [ ] `make --version` works (or I have installed a Make equivalent).
+- [ ] I can start the Prometheus + Grafana stack with `docker-compose up -d` in `workshop/stack/`.
+- [ ] Grafana is reachable at http://localhost:3000.
+- [ ] Prometheus is reachable at http://localhost:9090.
+- [ ] I have created a Grafana service account token and stored it securely.
+- [ ] I can verify the `k6 Results` dashboard receives remote-write metrics.
 - [ ] My corporate laptop/network allows Docker and MCP processes to run.
 - [ ] I have access to the workshop repository.
 - [ ] I have checked that no secrets or company credentials are stored in my test repository.
@@ -598,6 +751,7 @@ Run the following commands before the workshop:
 git --version
 k6 version
 docker version
+make --version
 ```
 
 If using Homebrew-installed `mcp-k6`:
@@ -612,6 +766,28 @@ If using Docker:
 docker images | grep -E "grafana/(k6|mcp-k6|mcp-grafana)"
 ```
 
+Start the observability stack:
+
+```bash
+cd workshop/stack
+docker-compose up -d
+curl -s http://localhost:9090/-/healthy
+curl -s http://localhost:3000/api/health
+```
+
+Verify k6 remote write reaches Prometheus:
+
+```bash
+k6 run \
+  -o experimental-prometheus-rw \
+  -e PROMETHEUS_RW_SERVER_URL=http://localhost:9090/api/v1/write \
+  --duration 10s \
+  --vus 1 \
+  https://test.k6.io
+```
+
+Then open the **k6 Results** dashboard in Grafana (http://localhost:3000) and confirm metrics are appearing.
+
 Finally:
 
 1. Open the workshop repository in your editor.
@@ -619,8 +795,9 @@ Finally:
 3. Ask it to explain one file from the repository.
 4. Confirm that it can discover or invoke a project Skill.
 5. Confirm that your MCP configuration can be edited.
+6. Confirm the Grafana service account token is available via `GRAFANA_SERVICE_ACCOUNT_TOKEN`.
 
-If all five steps work, you are ready.
+If all six steps work, you are ready.
 
 ---
 
@@ -628,6 +805,8 @@ If all five steps work, you are ready.
 
 - k6 documentation: https://grafana.com/docs/k6/latest/
 - Install k6: https://grafana.com/docs/k6/latest/set-up/install-k6/
+- Prometheus: https://prometheus.io/
+- Grafana: https://grafana.com/
 - mcp-k6: https://github.com/grafana/mcp-k6
 - mcp-grafana: https://github.com/grafana/mcp-grafana
 - k6 Agent Skills example repository: https://github.com/MrsDaehin/copilot-k6-skills

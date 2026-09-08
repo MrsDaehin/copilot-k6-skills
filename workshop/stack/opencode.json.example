@@ -1,0 +1,17 @@
+{
+  "mcp": {
+    "grafana": {
+      "type": "local",
+      "command": ["uvx", "mcp-grafana"],
+      "env": {
+        "GRAFANA_URL": "http://localhost:3000",
+        "GRAFANA_SERVICE_ACCOUNT_TOKEN": "<your-grafana-service-account-token>"
+      }
+    },
+    "k6": {
+      "type": "local",
+      "command": ["docker", "run", "-i", "--rm", "-e", "K6_PATH=/usr/bin/k6", "-v", "${workspaceFolder}:/work", "-w", "/work", "grafana/mcp-k6:latest"],
+      "env": {}
+    }
+  }
+}

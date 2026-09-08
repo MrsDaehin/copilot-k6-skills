@@ -1,10 +1,17 @@
 # Copilot K6 Skills
 
-A shared repository of GitHub Copilot skills focused on k6 performance testing automation.
+A shared repository of reusable AI Agent Skills for k6 performance testing automation and Grafana validation.
 
 ## Overview
 
-This repo contains reusable skills that can be integrated into GitHub Copilot to assist with k6 load testing configurations and workflows. Skills are stored under `.github/skills/` and follow the standard Copilot skill format.
+This repo contains reusable skills that can be integrated into GitHub Copilot, OpenCode, and other compatible AI coding assistants to assist with k6 load testing, Grafana validation, and performance engineering workflows.
+
+Skills are stored in two locations:
+
+- **`.github/skills/`** — for GitHub Copilot
+- **`.opencode/skills/`** — for OpenCode
+
+Both contain the same `SKILL.md` files and can be mirrored to other agent directories (`.claude/skills/`, `.agents/skills/`).
 
 ## Available Skills
 
@@ -41,7 +48,30 @@ Generates a complete k6 performance test project boilerplate from an OpenAPI spe
 - **Location**: `.github/skills/k6-boilerplate-generator/`
 - **Example**: See `examples/Petstore.k6.Performance/` for a complete generated project based on the Swagger Petstore API
 
+### k6-test-suite
+Generates a complete k6 performance test suite with scenario scripts, configuration files, thresholds, and Prometheus remote write output targeting Grafana.
+
+- **Location**: `.github/skills/k6-test-suite/` and `.opencode/skills/k6-test-suite/`
+
+### k6-grafana-validation
+Validates k6 test results against Grafana by querying Prometheus metrics via mcp-grafana, checking SLO thresholds, and verifying dashboard panels.
+
+- **Location**: `.github/skills/k6-grafana-validation/` and `.opencode/skills/k6-grafana-validation/`
+
+## Workshop
+
+A hands-on workshop teaches how to create Agent Skills that generate k6 test suites and validate results against Grafana using MCP.
+
+- **Agenda**: `workshop/AGENDA.md`
+- **Facilitator guide**: `workshop/FACILITATOR.md`
+- **Exercises**: `workshop/exercises/`
+- **Local stack**: `workshop/stack/` (Docker Compose with Prometheus + Grafana)
+
+Start with [Exercise 1: Skill Anatomy](workshop/exercises/01-skill-anatomy.md).
+
 ## How to Use in Your Repo
+
+### GitHub Copilot
 
 1. Add this repo as a submodule:
    ```bash
@@ -56,9 +86,18 @@ Generates a complete k6 performance test project boilerplate from an OpenAPI spe
 
 3. Skills will be automatically available in Copilot for that repo.
 
+### OpenCode
+
+1. Add this repo as a submodule:
+   ```bash
+   git submodule add https://github.com/<your-org>/copilot-k6-skills.git .opencode/skills
+   ```
+
+2. Skills will be discovered automatically when you open the project in OpenCode.
+
 ## Adding New Skills
 
-1. Create a new folder under `.github/skills/`
+1. Create a new folder under `.github/skills/` (and `.opencode/skills/` for OpenCode)
 2. Add a `SKILL.md` file with YAML frontmatter and documentation
 3. Optionally add supporting files (examples, templates, etc.)
 4. Commit and push to share with all consuming repos

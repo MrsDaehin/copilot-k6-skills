@@ -13,8 +13,9 @@ You will learn to:
 1. Understand and author `SKILL.md` files for OpenCode.
 2. Build a k6 test suite skill that generates scenario scripts, configs, thresholds, and Prometheus remote write output.
 3. Set up a local Grafana + Prometheus stack to receive and visualize k6 metrics.
-4. Use the `mcp-grafana` MCP server to query stored metrics, validate SLO thresholds, and verify dashboard panels.
-5. Close the feedback loop: **generate -> run -> validate**.
+4. Use the `mcp-k6` MCP server to generate, validate, and run k6 scripts directly from the agent.
+5. Use the `mcp-grafana` MCP server to query stored metrics, validate SLO thresholds, and verify dashboard panels.
+6. Close the feedback loop: **generate -> run -> validate**.
 
 ---
 
@@ -26,7 +27,7 @@ You will learn to:
 
 ## Duration
 
-Approximately **4 hours** (including breaks).
+Approximately **5 hours** (including breaks).
 
 ## Prerequisites
 
@@ -93,7 +94,24 @@ See `REQUIREMENTS.md` for the full pre-workshop checklist. The minimum:
 
 ---
 
-### Module 4: Run and Validate (60 min)
+### Module 4: MCP for k6 (30 min)
+
+**The execution half**
+
+- The `mcp-k6` MCP server (github.com/grafana/mcp-k6): what it adds beyond `mcp-grafana`
+- Tools: `validate_script`, `run_script`, `list_sections`, `get_documentation`
+- The `generate_script` prompt and the `prompts://k6/generate_script` best-practices resource
+- Browsing the official k6 docs through MCP
+- The full script lifecycle in chat: **generate -> validate -> run -> analyze**
+- Combining ad-hoc MCP runs with the skill-generated suite
+
+**Hands-on:** Generate, validate, and run a k6 script via the agent.
+
+> Exercise: `04-mcp-k6.md`
+
+---
+
+### Module 5: Run and Validate (60 min)
 
 **The feedback loop**
 
@@ -106,7 +124,7 @@ See `REQUIREMENTS.md` for the full pre-workshop checklist. The minimum:
 
 **Hands-on:** Full generate -> run -> validate cycle.
 
-> Exercise: `04-run-and-validate.md`
+> Exercise: `05-run-and-validate.md`
 
 ---
 
@@ -114,7 +132,7 @@ See `REQUIREMENTS.md` for the full pre-workshop checklist. The minimum:
 
 ---
 
-### Module 5: Extend and Share (30 min)
+### Module 6: Extend and Share (30 min)
 
 **Taking it further**
 
@@ -126,7 +144,7 @@ See `REQUIREMENTS.md` for the full pre-workshop checklist. The minimum:
 
 **Hands-on:** Extend the skill, add permissions, test in a consuming repo.
 
-> Exercise: `05-extend-and-share.md`
+> Exercise: `06-extend-and-share.md`
 
 ---
 
@@ -157,8 +175,9 @@ copilot-k6-skills/
     │   ├── 01-skill-anatomy.md
     │   ├── 02-create-test-suite-skill.md
     │   ├── 03-grafana-stack.md
-    │   ├── 04-run-and-validate.md
-    │   └── 05-extend-and-share.md
+    │   ├── 04-mcp-k6.md
+    │   ├── 05-run-and-validate.md
+    │   └── 06-extend-and-share.md
     └── stack/                         # Local Grafana + Prometheus
         ├── docker-compose.yml
         ├── opencode.json.example
@@ -180,7 +199,9 @@ By the end of this workshop, participants will be able to:
 | Configure k6 to stream results to Prometheus | 2, 3 |
 | Set up a local Grafana + Prometheus stack | 3 |
 | Configure MCP servers in OpenCode | 3 |
-| Query Prometheus metrics via `mcp-grafana` | 4 |
-| Validate k6 SLO thresholds against Grafana data | 4 |
-| Verify dashboard panels via MCP | 4 |
-| Extend and share skills across AI assistants | 5 |
+| Generate, validate, and run k6 scripts via `mcp-k6` | 4 |
+| Browse the official k6 docs through `mcp-k6` | 4 |
+| Query Prometheus metrics via `mcp-grafana` | 5 |
+| Validate k6 SLO thresholds against Grafana data | 5 |
+| Verify dashboard panels via MCP | 5 |
+| Extend and share skills across AI assistants | 6 |

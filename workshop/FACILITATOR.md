@@ -14,8 +14,9 @@
 
 1. Clone the workshop repository.
 2. Pre-configure MCP servers in `opencode.json` with valid Grafana credentials if a shared Grafana is used.
-3. Run `docker-compose up -d` from `workshop/stack/` before the session starts.
-4. Open a Grafana browser tab with the k6 Results dashboard loaded.
+3. Pull the mcp-k6 image so the demo is not blocked on a download: `docker pull grafana/mcp-k6:latest`.
+4. Run `docker-compose up -d` from `workshop/stack/` before the session starts.
+5. Open a Grafana browser tab with the k6 Results dashboard loaded.
 
 ---
 
@@ -136,7 +137,50 @@ Have participants:
 
 ---
 
-## Module 4: Run and Validate (60 min)
+## Module 4: MCP for k6 (30 min)
+
+### Timing
+
+- Architecture: mcp-k6 vs mcp-grafana: 5 min
+- Demo: generate, validate, run via the agent: 10 min
+- Hands-on: 15 min
+
+### Talking points
+
+- `mcp-k6` is the **execution** half; `mcp-grafana` is the **observation** half.
+- It gives the agent a full script lifecycle in chat: `generate_script` -> `validate_script` -> `run_script` -> analyze.
+- Docs browsing (`list_sections`, `get_documentation`) means the agent reads the *current* official k6 docs.
+- `run_script` caps `duration` at `5m`.
+- Ad-hoc MCP runs complement the skill-generated suite; they are not a replacement.
+- The Docker image bundles k6; native installs need `k6` in PATH.
+
+### Demo
+
+1. Confirm the k6 MCP server is connected: *"What tools does the k6 MCP server provide?"*
+2. Browse docs: *"List the top-level k6 documentation sections."*
+3. Generate a script: *"Use the mcp-k6 generate_script prompt to create a test for https://petstore3.swagger.io/api/v3 that gets a pet by ID."*
+4. Validate: *"Validate the generated script with validate_script."*
+5. Run: *"Run the script with 10 VUs for 30 seconds."*
+6. Ask for a verdict: *"Analyze the results — did it meet p(95)<500ms and error rate<1%?"*
+
+### Hands-on
+
+Have participants follow `04-mcp-k6.md` step by step.
+
+### Key reference files
+
+- `workshop/stack/opencode.json.example` — includes the `k6` MCP server block
+- `workshop/exercises/04-mcp-k6.md` — exercise guide
+
+### Common pitfalls
+
+- Docker image not pulled or Docker daemon not running.
+- OpenCode does not expand `${workspaceFolder}` — use an absolute path for the volume mount.
+- Seeking persisted Grafana validation right after an `mcp-k6` run — metrics only reach Grafana via Prometheus remote write, which is Exercise 5.
+
+---
+
+## Module 5: Run and Validate (60 min)
 
 ### Timing
 
@@ -183,7 +227,7 @@ Have participants:
 
 ---
 
-## Module 5: Extend and Share (30 min)
+## Module 6: Extend and Share (30 min)
 
 ### Timing
 
@@ -217,7 +261,7 @@ Have participants:
 ## Wrap-up (10 min)
 
 - Recap the feedback loop: **Skill -> Generate -> Run -> Validate**.
-- Recap what was built: two skills, a Grafana stack, a validation workflow.
+- Recap what was built: two skills, a Grafana stack, an `mcp-k6` execution pipeline, and a validation workflow.
 - Q and A.
 - Next steps: CI gates, custom dashboards, distributed testing, team skill libraries.
 

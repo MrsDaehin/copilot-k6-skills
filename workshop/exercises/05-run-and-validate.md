@@ -1,4 +1,4 @@
-# Exercise 4: Run and Validate
+# Exercise 5: Run and Validate
 
 **Objective:** Generate a k6 test suite using the skill, run it, and validate the results against Grafana via MCP.
 
@@ -180,4 +180,4 @@ The agent should query per-operation metrics and identify the slowest endpoints.
 
 ## Next
 
-Proceed to Exercise 5: [Extend and Share](05-extend-and-share.md)
+Proceed to Exercise 6: [Extend and Share](06-extend-and-share.md)

@@ -10,7 +10,7 @@
     },
     "k6": {
       "type": "local",
-      "command": ["docker", "run", "-i", "--rm", "-e", "K6_PATH=/usr/bin/k6", "-v", "${workspaceFolder}:/work", "-w", "/work", "grafana/mcp-k6:latest"],
+      "command": ["docker", "run", "-i", "--rm", "-e", "K6_PATH=/usr/bin/k6", "-v", "<absolute-path-to-your-repo>:/work", "-w", "/work", "grafana/mcp-k6:latest"],
       "env": {}
     }
   }

@@ -119,6 +119,8 @@ To create a Grafana service account token:
 2. Create a new service account with **Editor** role.
 3. Generate a token and paste it into `opencode.json`.
 
+The example file also includes a `k6` MCP server. If you want it usable in the next exercise, replace the `<absolute-path-to-your-repo>` placeholder in the `-v` flag with the absolute path to this repository (OpenCode does not expand `${workspaceFolder}`-style variables). See Exercise 4 for a step-by-step setup.
+
 ### 5. Verify MCP connection
 
 Ask the agent:
@@ -179,4 +181,4 @@ You should see panels with data from the test run.
 
 ## Next
 
-Proceed to Exercise 4: [Run and Validate](04-run-and-validate.md)
+Proceed to Exercise 4: [MCP for k6: Script Generation, Validation, and Execution](04-mcp-k6.md)

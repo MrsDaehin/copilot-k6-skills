@@ -162,15 +162,15 @@ Check the returned metrics:
 - `http_req_failed` (error rate)
 - `http_reqs` (throughput)
 
-### 7. Ask the agent for a pass/fail readout
+### 7. Ask the agent to analyze the results
 
 Ask:
 
 ```
-Analyze the run results. Did the test meet p(95)<500ms and error rate<1%? Summarize the metrics.
+Analyze the run results. Did the test meet p(95)<500ms and error rate<1%? Summarize the metrics and tell me which latency component dominates.
 ```
 
-The agent should translate the raw metrics into a plain-language verdict — no dashboard required.
+The agent should translate the raw metrics into a plain-language verdict — no dashboard required. For deeper interpretation of percentiles and the request duration breakdown, it can load the `k6-grafana-validation` skill and its `reference/bottleneck-patterns.md` reference (used fully in Exercise 5).
 
 ### 8. Where this fits (bridge to Exercise 5)
 

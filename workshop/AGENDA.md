@@ -119,6 +119,7 @@ See `REQUIREMENTS.md` for the full pre-workshop checklist. The minimum:
 - Run k6 with Prometheus output
 - Query metrics via `mcp-grafana` (PromQL)
 - Validate SLO thresholds (p95 latency, error rate)
+- Analyze latency distribution and the HTTP duration breakdown to find bottlenecks
 - Verify dashboard panels are populated
 - Diagnose failures
 
@@ -203,5 +204,6 @@ By the end of this workshop, participants will be able to:
 | Browse the official k6 docs through `mcp-k6` | 4 |
 | Query Prometheus metrics via `mcp-grafana` | 5 |
 | Validate k6 SLO thresholds against Grafana data | 5 |
+| Analyze test results and identify bottlenecks | 5 |
 | Verify dashboard panels via MCP | 5 |
 | Extend and share skills across AI assistants | 6 |

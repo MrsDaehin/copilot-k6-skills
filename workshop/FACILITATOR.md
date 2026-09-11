@@ -195,6 +195,7 @@ Have participants follow `04-mcp-k6.md` step by step.
 
 - The skill generates the suite; the human runs it; the validation skill queries Grafana.
 - SLO checks are PromQL queries: `histogram_quantile` for latency, ratio for error rate.
+- Analysis goes beyond pass/fail: percentile ratios and the HTTP duration breakdown (`blocked`/`waiting`/`receiving`) point to the bottleneck.
 - Dashboard panels are just PromQL visualizations — MCP can query them directly.
 - The pass/fail report is the output of the validation skill.
 

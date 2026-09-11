@@ -100,12 +100,12 @@ k6_vus
 
 You should see the virtual user count over time matching the load profile.
 
-### 6. Validate via the agent
+### 6. Validate and analyze via the agent
 
 Ask the agent:
 
 ```
-Validate the k6 test results against Grafana. Check if the p(95) latency was under 800ms and the error rate was under 1%.
+Validate the k6 test results against Grafana. Check if the p(95) latency was under 800ms and the error rate was under 1%, then analyze the latency distribution and duration breakdown to identify any bottleneck.
 ```
 
 The agent should:
@@ -115,7 +115,10 @@ The agent should:
    - `query_prometheus` for `k6_http_reqs_total`
    - `query_prometheus_histogram` for p95 latency
    - `query_prometheus` for error rate
-3. Produce a validation report with pass/fail results
+3. Analyze response-time percentiles (p50/p90/p95/p99) and the p95/p50 ratio
+4. Break down `http_req_duration` into its components via the `k6_http_req_*_sum/count` metrics and flag the dominant component
+5. Match the signals against `reference/bottleneck-patterns.md` in the skill
+6. Produce a validation report with pass/fail results plus analysis findings and recommendations
 
 ### 7. Check the dashboard
 
@@ -167,6 +170,14 @@ The last test run failed. Query Grafana to find which operations had the highest
 
 The agent should query per-operation metrics and identify the slowest endpoints.
 
+Then dig into the cause:
+
+```
+Break down the request duration into blocked, connecting, tls_handshaking, sending, waiting, and receiving for the slowest operation. Which component dominates and what does it suggest?
+```
+
+The agent should use the `k6_http_req_*_sum/count` metrics per `operation` and map the dominant component to a bottleneck pattern (e.g., `waiting` = server-side processing, `blocked` = connection pool exhaustion).
+
 ---
 
 ## Key takeaways
@@ -174,7 +185,8 @@ The agent should query per-operation metrics and identify the slowest endpoints.
 - The skill ensures consistency: every generated suite follows the same conventions.
 - Prometheus remote write stores metrics durably for post-run analysis.
 - `mcp-grafana` turns Grafana into a queryable data source for the AI agent.
-- The feedback loop (generate -> run -> validate) is fully AI-driven.
+- The `k6-grafana-validation` skill goes beyond pass/fail: it analyzes percentile distribution and the HTTP duration breakdown to pinpoint bottlenecks.
+- The feedback loop (generate -> run -> validate -> analyze) is fully AI-driven.
 
 ---
 

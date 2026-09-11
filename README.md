@@ -54,7 +54,7 @@ Generates a complete k6 performance test suite with scenario scripts, configurat
 - **Location**: `.github/skills/k6-test-suite/` and `.opencode/skills/k6-test-suite/`
 
 ### k6-grafana-validation
-Validates k6 test results against Grafana by querying Prometheus metrics via mcp-grafana, checking SLO thresholds, and verifying dashboard panels.
+Validates and analyzes k6 test results against Grafana: queries Prometheus metrics via mcp-grafana, checks SLO thresholds, diagnoses bottlenecks (percentile health, HTTP duration breakdown, root-cause patterns), and verifies dashboard panels.
 
 - **Location**: `.github/skills/k6-grafana-validation/` and `.opencode/skills/k6-grafana-validation/`
 

@@ -9,6 +9,8 @@
 - Have the `opencode.json.example` ready to copy.
 - Confirm Grafana is accessible at `http://localhost:3000` (admin/admin).
 - Confirm Prometheus is accessible at `http://localhost:9090`.
+- Open the root `AGENTS.md` and `workshop/01-What-is-a-skill/README.md` as the Module 1 references.
+- Remind participants that this is a documentation and skills repository: there is no root `npm test`, Makefile, or CI pipeline to run.
 
 ### Demo machine preparation
 
@@ -25,8 +27,9 @@
 ### Timing
 
 - Introduction and agenda: 5 min
-- What are Agent Skills: 15 min
-- Existing k6 skills walkthrough: 15 min
+- What are Agent Skills: 10 min
+- `AGENTS.md` vs. Agent Skills: 10 min
+- Existing k6 skills walkthrough: 10 min
 - Hands-on: inspect and modify a skill: 10 min
 
 ### Talking points
@@ -35,26 +38,39 @@
 - The `name` must match the directory name. Lowercase, hyphens only.
 - Discovery paths differ per assistant (`.opencode/skills/`, `.github/skills/`, `.claude/skills/`, `.agents/skills/`).
 - Skills are loaded **on demand** via the `skill` tool — the agent sees only names and descriptions until it loads one.
+- `AGENTS.md` is the always-available project brief: repository layout, commands, and conventions.
+- A skill is a task-specific package: an activation description, a workflow, and optional resources.
+- The two complement each other — `AGENTS.md` explains the project, a skill explains a particular job. `workshop/01-What-is-a-skill/README.md` is the guided comparison.
 
 ### Demo
 
-1. Open an existing skill (e.g., `k6-config-generator`).
-2. Show the frontmatter.
-3. Ask the AI agent: *"What skills are available?"* — show the `<available_skills>` block.
-4. Load a skill and show the instructions injected into context.
+1. Open the root `AGENTS.md` and point out the repository map and skill editing rules.
+2. Open `workshop/01-What-is-a-skill/README.md` and show the `AGENTS.md` vs. Agent Skills table.
+3. Open an existing mirrored skill (e.g., `.opencode/skills/k6-test-suite/SKILL.md`) and show the frontmatter.
+4. Ask the AI agent: *"What skills are available?"* — show the `<available_skills>` block.
+5. Load a skill and show the instructions injected into context.
 
 ### Hands-on
 
 Have participants:
-1. Read the `k6-documentation` skill.
-2. Ask the agent a question that should trigger the skill.
-3. Modify the description and verify the agent sees the change.
+1. Read the root `AGENTS.md` and `workshop/01-What-is-a-skill/README.md`.
+2. Point to one project-wide rule in `AGENTS.md` and one task-specific workflow in a skill.
+3. Ask the agent a question that should trigger the skill.
+4. Modify the description and verify the agent sees the change.
+
+### Key reference files
+
+- `AGENTS.md` — repository-wide instructions for coding agents
+- `workshop/01-What-is-a-skill/README.md` — Agent Skills primer and sourced `AGENTS.md` comparison
+- `workshop/exercises/01-skill-anatomy.md` — exercise guide
 
 ### Common pitfalls
 
 - `SKILL.md` must be all caps. Files named `skill.md` or `Skill.md` will not be discovered.
 - Skill names must be unique across all directories.
 - Description too vague: the agent won't know when to load it.
+- Duplicating skill content in `AGENTS.md`: keep stable project rules in `AGENTS.md` and specialized workflows in skills.
+- Editing one mirrored copy only: `k6-test-suite` and `k6-grafana-validation` must stay identical under `.opencode/skills/` and `.github/skills/`.
 
 ---
 
@@ -74,6 +90,8 @@ Have participants:
 - The conventions (thresholds, executors, tags) are team decisions encoded in the skill.
 - `ramping-arrival-rate` models real-world traffic better than `constant-vus`.
 - Operation tags in k6 enable per-endpoint breakdowns in Grafana.
+- `AGENTS.md` records the conventions that must survive every edit: default `p(95)<500ms`, error rate `<0.01`, `ENVIRONMENT=dev`, and Prometheus remote-write output.
+- Shared skills are mirrored, so any change must be applied to both `.opencode/skills/` and `.github/skills/`.
 
 ### Demo
 
@@ -112,6 +130,8 @@ Have participants:
 - Prometheus must be started with `--web.enable-remote-write-receiver` to accept writes.
 - Grafana provisions its datasource and dashboard automatically from the `provisioning/` directory.
 - The MCP server is a bridge: the AI agent talks to Grafana through it.
+- `opencode.json.example` is a template, not a ready-to-use config: current OpenCode uses `environment` (not the example's `env`) for MCP environment variables.
+- Skills describe procedures; `mcp-k6` and `mcp-grafana` are what actually execute tests and query metrics.
 
 ### Demo
 
@@ -134,6 +154,8 @@ Have participants:
 - Prometheus not started with remote write receiver: k6 will fail silently.
 - Grafana token not set: MCP server will fail to connect.
 - Docker not running or port conflicts.
+- MCP server will not start: the example still uses `env`; OpenCode expects `environment`.
+- Participant edited `opencode.json` or a skill but sees no change: restart OpenCode so it reloads the configuration.
 
 ---
 
@@ -224,6 +246,7 @@ Have participants:
 ### Key reference files
 
 - `.opencode/skills/k6-grafana-validation/SKILL.md` — validation workflow
+- `.opencode/skills/k6-grafana-validation/reference/` — metric and bottleneck material
 - `workshop/stack/opencode.json.example` — MCP config
 
 ---
@@ -240,8 +263,10 @@ Have participants:
 ### Talking points
 
 - Skills can be extended with custom metrics and operation tags.
+- Keep stable project rules in the root `AGENTS.md`; keep specialized workflows in skills.
 - Permissions in `opencode.json` control which skills agents can load.
 - The same `SKILL.md` works across Copilot, OpenCode, and compatible agents — just place it in the right directory.
+- Only `k6-test-suite` and `k6-grafana-validation` are mirrored today; the remaining `.github/skills/` entries are Copilot-only.
 - The submodule pattern lets teams share skills across repositories.
 
 ### Demo
@@ -262,6 +287,7 @@ Have participants:
 ## Wrap-up (10 min)
 
 - Recap the feedback loop: **Skill -> Generate -> Run -> Validate**.
+- Recap the split: `AGENTS.md` for project rules, skills for specialized workflows, MCP for execution and observability.
 - Recap what was built: two skills, a Grafana stack, an `mcp-k6` execution pipeline, and a validation workflow.
 - Q and A.
 - Next steps: CI gates, custom dashboards, distributed testing, team skill libraries.
@@ -277,4 +303,5 @@ Have participants:
 | MCP server won't start | Check Grafana URL and service account token in `opencode.json` |
 | Grafana shows no data | Verify Prometheus received data at `http://localhost:9090` first |
 | Agent doesn't load the skill | Description may be too vague; refine it to describe when the skill should be used |
+| Agent ignores repository conventions | Check the root `AGENTS.md` is present and matches the project |
 | Port conflict on 3000 or 9090 | Stop other services or adjust ports in `docker-compose.yml` |

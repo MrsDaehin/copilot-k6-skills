@@ -10,12 +10,13 @@ This workshop teaches you to create **Agent Skills** that generate a **k6 perfor
 
 You will learn to:
 
-1. Understand and author `SKILL.md` files for OpenCode.
-2. Build a k6 test suite skill that generates scenario scripts, configs, thresholds, and Prometheus remote write output.
-3. Set up a local Grafana + Prometheus stack to receive and visualize k6 metrics.
-4. Use the `mcp-k6` MCP server to generate, validate, and run k6 scripts directly from the agent.
-5. Use the `mcp-grafana` MCP server to query stored metrics, validate SLO thresholds, and verify dashboard panels.
-6. Close the feedback loop: **generate -> run -> validate**.
+1. Explain the difference between `AGENTS.md` and Agent Skills.
+2. Understand and author `SKILL.md` files for OpenCode.
+3. Build a k6 test suite skill that generates scenario scripts, configs, thresholds, and Prometheus remote write output.
+4. Set up a local Grafana + Prometheus stack to receive and visualize k6 metrics.
+5. Use the `mcp-k6` MCP server to generate, validate, and run k6 scripts directly from the agent.
+6. Use the `mcp-grafana` MCP server to query stored metrics, validate SLO thresholds, and verify dashboard panels.
+7. Close the feedback loop: **generate -> run -> validate**.
 
 ---
 
@@ -47,13 +48,16 @@ See `REQUIREMENTS.md` for the full pre-workshop checklist. The minimum:
 
 **What are Agent Skills?**
 
+**Preparation:** Read the root `AGENTS.md` and the primer in `01-What-is-a-skill/README.md`.
+
 - The `SKILL.md` format: frontmatter, naming rules, discovery paths
 - How OpenCode loads skills on demand
+- `AGENTS.md` vs. `SKILL.md`: project-wide instructions vs. on-demand capability
 - Existing k6 skills in this repository
 
-**Hands-on:** Inspect existing skills, modify a `SKILL.md`, verify discovery.
+**Hands-on:** Inspect the root `AGENTS.md` and existing skills, modify a `SKILL.md`, verify discovery.
 
-> Exercise: `01-skill-anatomy.md`
+> Exercise: `exercises/01-skill-anatomy.md`
 
 ---
 
@@ -70,7 +74,7 @@ See `REQUIREMENTS.md` for the full pre-workshop checklist. The minimum:
 
 **Hands-on:** Write `k6-test-suite` SKILL.md step by step.
 
-> Exercise: `02-create-test-suite-skill.md`
+> Exercise: `exercises/02-create-test-suite-skill.md`
 
 ---
 
@@ -90,7 +94,7 @@ See `REQUIREMENTS.md` for the full pre-workshop checklist. The minimum:
 
 **Hands-on:** Start the local stack, configure MCP.
 
-> Exercise: `03-grafana-stack.md`
+> Exercise: `exercises/03-grafana-stack.md`
 
 ---
 
@@ -107,7 +111,7 @@ See `REQUIREMENTS.md` for the full pre-workshop checklist. The minimum:
 
 **Hands-on:** Generate, validate, and run a k6 script via the agent.
 
-> Exercise: `04-mcp-k6.md`
+> Exercise: `exercises/04-mcp-k6.md`
 
 ---
 
@@ -125,7 +129,7 @@ See `REQUIREMENTS.md` for the full pre-workshop checklist. The minimum:
 
 **Hands-on:** Full generate -> run -> validate cycle.
 
-> Exercise: `05-run-and-validate.md`
+> Exercise: `exercises/05-run-and-validate.md`
 
 ---
 
@@ -145,7 +149,7 @@ See `REQUIREMENTS.md` for the full pre-workshop checklist. The minimum:
 
 **Hands-on:** Extend the skill, add permissions, test in a consuming repo.
 
-> Exercise: `06-extend-and-share.md`
+> Exercise: `exercises/06-extend-and-share.md`
 
 ---
 
@@ -161,6 +165,7 @@ See `REQUIREMENTS.md` for the full pre-workshop checklist. The minimum:
 
 ```
 copilot-k6-skills/
+├── AGENTS.md                          # Repository instructions for coding agents
 ├── SKILLS.md                          # What is an OpenCode Skill?
 ├── REQUIREMENTS.md                    # Pre-workshop checklist
 ├── .opencode/skills/                  # OpenCode skills
@@ -172,6 +177,8 @@ copilot-k6-skills/
 └── workshop/
     ├── AGENDA.md                      # This file
     ├── FACILITATOR.md                 # Facilitator guide
+    ├── 01-What-is-a-skill/            # Agent Skills primer
+    │   └── README.md
     ├── exercises/                     # Hands-on guides
     │   ├── 01-skill-anatomy.md
     │   ├── 02-create-test-suite-skill.md
@@ -195,6 +202,7 @@ By the end of this workshop, participants will be able to:
 | Objective | Module |
 |-----------|--------|
 | Explain what an Agent Skill is and how `SKILL.md` works | 1 |
+| Explain how `AGENTS.md` complements an Agent Skill | 1 |
 | Write a `SKILL.md` with correct frontmatter and naming | 1, 2 |
 | Generate a k6 test suite using a skill | 2 |
 | Configure k6 to stream results to Prometheus | 2, 3 |

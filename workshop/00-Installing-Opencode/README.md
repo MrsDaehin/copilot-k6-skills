@@ -1,8 +1,8 @@
 # 00 — Installing OpenCode
 
-This guide installs **OpenCode**, the AI coding agent used throughout the workshop, on Windows and macOS, and then connects it to a model provider.
+This guide installs **OpenCode**, the AI coding agent used throughout the workshop, and **k6**, the load testing tool it drives, on Windows and macOS. It then connects OpenCode to a model provider.
 
-> **Reference:** [OpenCode documentation](https://opencode.ai/docs) · [Windows (WSL) guide](https://opencode.ai/docs/windows-wsl)
+> **Reference:** [OpenCode documentation](https://opencode.ai/docs) · [Windows (WSL) guide](https://opencode.ai/docs/windows-wsl) · [Install k6](https://grafana.com/docs/k6/latest/set-up/install-k6/)
 
 ---
 
@@ -26,8 +26,9 @@ For this workshop you need it because:
 | An LLM provider account | You will need an API key or a subscription |
 | WSL (Windows only) | Recommended; see below |
 | Node.js (optional) | Only if you prefer the npm installation method |
+| Homebrew (macOS only) | Recommended; needed for the k6 installation |
 
-You do not need k6, Docker, or Grafana installed to complete this module. Those are covered in [`REQUIREMENTS.md`](../../REQUIREMENTS.md).
+Docker and Grafana are not needed to complete this module. They are covered in [`REQUIREMENTS.md`](../../REQUIREMENTS.md).
 
 ---
 
@@ -150,6 +151,90 @@ Then point the desktop app at `http://localhost:4096`. If `localhost` does not r
 
 ---
 
+## Install k6
+
+The workshop generates, validates, and runs performance tests with **Grafana k6**. The agent writes the scripts, but k6 itself runs on your machine (or in the `mcp-k6` Docker container).
+
+### On macOS
+
+Using [Homebrew](https://brew.sh/):
+
+```bash
+brew install k6
+```
+
+That is the only method needed on macOS. If you prefer not to use a package manager, download the standalone binary from the [k6 releases](https://github.com/grafana/k6/releases) and put `k6` on your `PATH`.
+
+### On Windows
+
+Pick one:
+
+```powershell
+winget install k6 --source winget
+```
+
+```powershell
+choco install k6
+```
+
+Or download and run [the official MSI installer](https://dl.k6.io/msi/k6-latest-amd64.msi).
+
+> The Chocolatey package is community-maintained. The `winget` manifests come from the k6 community, and the MSI is the official Grafana installer.
+
+### Running k6 in WSL
+
+If you run OpenCode from WSL, install k6 inside WSL too so the agent finds it on the same `PATH`:
+
+```bash
+curl -fsSL https://dl.k6.io/key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/k6-archive-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+sudo apt-get update
+sudo apt-get install k6
+```
+
+### Verify
+
+```bash
+k6 version
+```
+
+Then run a first test against the public k6 endpoint to confirm end-to-end execution:
+
+```bash
+k6 run https://test.k6.io
+```
+
+You should see a completed execution with latency and check metrics in the terminal.
+
+### Docker alternative
+
+If you would rather not install k6 on the host:
+
+```bash
+docker pull grafana/k6
+```
+
+Then run tests with:
+
+```bash
+docker run --rm -i grafana/k6 run - <script.js
+```
+
+> **Note:** The workshop also uses the experimental Prometheus remote write output. Confirm your version supports it, since it is required for the Grafana exercises:
+>
+> ```bash
+> k6 run \
+>   -o experimental-prometheus-rw \
+>   -e PROMETHEUS_RW_SERVER_URL=http://localhost:9090/api/v1/write \
+>   --duration 10s \
+>   --vus 1 \
+>   https://test.k6.io
+> ```
+>
+> See [`REQUIREMENTS.md`](../../REQUIREMENTS.md) for the full k6 checklist.
+
+---
+
 ## Connect a model provider
 
 OpenCode needs credentials for the model you want to use.
@@ -220,6 +305,8 @@ Global settings live in `~/.config/opencode/opencode.json`. Project-level settin
 | Skills are not listed | Confirm you launched OpenCode at the repository root and that the skills are under `.opencode/skills/`. |
 | A change to a skill has no effect | Restart OpenCode so the skill is re-read. |
 | Provider auth errors | Re-run `/connect` and paste a fresh key. |
+| `k6: command not found` in WSL | Install k6 inside WSL, not just on the Windows side. |
+| `unknown output: experimental-prometheus-rw` | Update k6; the Prometheus remote write output is experimental. |
 
 ---
 
@@ -227,6 +314,8 @@ Global settings live in `~/.config/opencode/opencode.json`. Project-level settin
 
 - macOS: install script, Homebrew tap, or a Node.js package manager.
 - Windows: WSL is recommended; native install is available via Chocolatey, Scoop, or npm.
+- k6: `brew install k6` on macOS, `winget`/Chocolatey/MSI on Windows, or Docker as an alternative.
+- Install k6 inside WSL if that is where OpenCode runs, so both share one `PATH`.
 - `/connect` links a model provider.
 - Skills are discovered from the directory you launch OpenCode in, so start at the repository root.
 - Restart OpenCode after changing `opencode.json`, `AGENTS.md`, or a skill.
@@ -242,3 +331,5 @@ Continue with [01 — What Is an Agent Skill?](../01-What-is-a-skill/README.md),
 - [OpenCode — Agent Skills](https://opencode.ai/docs/skills)
 - [OpenCode — MCP servers](https://opencode.ai/docs/mcp-servers)
 - [OpenCode — Releases](https://github.com/anomalyco/opencode/releases)
+- [k6 — Install k6](https://grafana.com/docs/k6/latest/set-up/install-k6/)
+- [k6 — Releases](https://github.com/grafana/k6/releases)

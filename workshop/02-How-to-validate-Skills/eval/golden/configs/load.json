@@ -1,0 +1,7 @@
+{
+  "scenarios": {
+    "load": {
+      "executor": "ramping-arrival-rate"
+    }
+  }
+}

@@ -108,6 +108,101 @@ The `description` is especially important: it helps the agent decide whether the
 
 ---
 
+## How custom skills work with the AI workflow
+
+The sections above describe the format. This section describes the runtime: what the agent actually reads, what happens to the rest of the skill folder, how skills reach custom agents, and what the interaction looks like from your side.
+
+### What the agent reads from a skill folder
+
+Only the frontmatter is read up front. For every skill it discovers, the agent receives the `name` and `description` — roughly 100 tokens — and nothing more. The body of `SKILL.md`, and every other file in the folder, stay out of context until something asks for them.
+
+| Part of the skill | When it is read | Purpose |
+|-------------------|-----------------|---------|
+| `name` and `description` in the frontmatter | At startup, for every discovered skill | Lets the agent decide whether the skill is relevant |
+| `SKILL.md` body | When the skill is activated | The workflow the agent follows |
+| `reference/`, `examples/`, `assets/`, `scripts/` | Only when the instructions point at them and the agent opens the file | Detail kept out of context until it is needed |
+
+Two consequences follow for authoring:
+
+- The `description` is the only text the agent sees when it chooses, so it must contain the words a person would actually type — "k6", "load test", "p95", "Grafana" — not just a label.
+- Anything the agent should read must be named in `SKILL.md` with a path relative to the skill root. A bundled file that no instruction references is never opened.
+
+### Are the bundled resources loaded automatically?
+
+No. They are *available*, not loaded. GitHub Copilot documents this explicitly: when a skill is invoked, Copilot discovers the files in the skill's directory and makes them available alongside the instructions. Their contents enter the context only when the agent reads a specific file.
+
+That makes resource loading demand-driven, and it has practical rules:
+
+- Reference resources explicitly, for example: *"Use `reference/metrics.md` for the full k6 metric list."*
+- Keep references one level deep from `SKILL.md`, and keep each file focused. Several small reference files cost less context than one long one.
+- Keep the `SKILL.md` body short; the specification recommends fewer than 500 lines and roughly 5,000 tokens, moving detail into `reference/` files. `k6-grafana-validation` follows this by keeping its metric catalog and diagnostic matrix in `reference/metrics.md` and `reference/bottleneck-patterns.md`.
+- Scripts are never executed on their own. The skill must state the command and its arguments, or the agent has no reason to run it.
+
+### Do custom agents get the skills too?
+
+Yes. Skills are a shared catalog, and every agent can activate them unless you restrict that per agent. In `opencode.json`:
+
+```json
+{
+  "permission": {
+    "skill": {
+      "*": "allow",
+      "internal-*": "deny",
+      "experimental-*": "ask"
+    }
+  }
+}
+```
+
+| Permission | Behavior |
+|------------|----------|
+| `allow` | The skill loads immediately |
+| `ask` | The user is prompted before the skill loads |
+| `deny` | The skill is hidden from the agent and cannot be loaded |
+
+Patterns accept wildcards, so `internal-*` covers a family of skills. Overrides are also available per agent — in agent frontmatter for custom agents, or under `agent.<name>.permission` in `opencode.json` for built-in agents. Setting `tools.skill: false` removes the skill tool entirely for that agent, and the skill list disappears from what it sees.
+
+This repository defines no custom agents, so both workshop skills are available to every OpenCode agent.
+
+### Where each agent looks for skills
+
+| | OpenCode | GitHub Copilot |
+|---|---|---|
+| Project | `.opencode/skills/`, `.claude/skills/`, `.agents/skills/` | `.github/skills/`, `.claude/skills/`, `.agents/skills/` |
+| Personal, all projects | `~/.config/opencode/skills/`, `~/.claude/skills/`, `~/.agents/skills/` | `~/.copilot/skills/`, `~/.agents/skills/` |
+
+OpenCode walks up from the directory you launched it in until it reaches the git worktree root, so start it at the repository root. Neither tool reads the other's private directory, which is exactly why this repository mirrors `k6-test-suite` and `k6-grafana-validation` into both locations. `.claude/skills/` and `.agents/skills/` are read by both, which is the option for authoring once instead of mirroring twice.
+
+Skill names must also be unique across all locations, or the skill is not discovered.
+
+> **Client difference:** OpenCode recognizes only `name`, `description`, `license`, `compatibility`, and `metadata` in frontmatter, and ignores anything else. The specification's experimental `allowed-tools` field is honored by Copilot, where it pre-approves tools so they do not prompt; anything not listed still asks for permission.
+
+### The workflow you interact with
+
+1. **You ask in natural language.** *"Generate a k6 load test for the Petstore API with p(95) < 300ms."* No command or slash command is involved.
+2. **The agent matches the description.** The `description` is the trigger. Being explicit — *"Use the k6-test-suite skill to…"* — produces the same activation with fewer surprises.
+3. **The skill activates.** In OpenCode this is a visible `skill({ name: "k6-test-suite" })` tool call in the transcript; in Copilot the `SKILL.md` is injected into the agent's context. Permissions apply at this moment: `ask` prompts you, `deny` fails.
+4. **The agent gathers what the instructions require.** It reads `reference/metrics.md` if the workflow needs it, and asks you the questions the skill says to ask — target URL, test types, authentication method, thresholds.
+5. **The agent executes.** Skills supply the instructions; tools do the work. Here that means file reads and writes, shell commands, and the `mcp-k6` and `mcp-grafana` MCP servers for running k6 and querying Prometheus.
+6. **The result feeds the next skill.** The generated suite is run, Prometheus stores the metrics, and a second request loads `k6-grafana-validation` to check the SLOs and diagnose bottlenecks. Skills compose into the loop:
+
+   ```text
+   skill generates -> k6 runs -> Prometheus stores -> skill validates -> findings
+   ```
+
+You can watch each stage happen:
+
+| Stage | What to look for |
+|-------|------------------|
+| Discovery | Ask "What skills are available?" and see names with descriptions |
+| Activation | A `skill` tool call naming the skill |
+| Resource loading | A read of a file under `reference/`, `examples/`, or `assets/` |
+| Execution | `mcp-k6` or `mcp-grafana` calls, or shell commands |
+
+Restart the agent after editing a skill so the change is picked up.
+
+---
+
 ## `AGENTS.md` vs. Agent Skills
 
 Both formats give coding agents reusable instructions, but they solve different problems. [AGENTS.md](https://agents.md/) is project guidance; [Agent Skills](https://agentskills.io/home) is a task-specific capability package.
@@ -169,9 +264,15 @@ The same skills are also organized for GitHub Copilot under [`.github/skills`](.
 - `SKILL.md` is the required entry point for metadata and instructions.
 - Skills can add scripts, references, templates, and other resources.
 - Discovery, activation, and execution happen progressively.
+- Only `name` and `description` are read at startup; bundled resources are read on demand.
+- Skills are triggered by the request, and permissions can allow, gate, or hide them per agent.
 - Well-written skills encode expertise and make workflows repeatable.
 
 ## References
 
 - [AGENTS.md — project instructions for coding agents](https://agents.md/)
 - [Agent Skills — format overview](https://agentskills.io/home)
+- [Agent Skills — specification](https://agentskills.io/specification)
+- [OpenCode — Agent Skills](https://opencode.ai/docs/skills/)
+- [GitHub Copilot — About agent skills](https://docs.github.com/en/copilot/concepts/agents/about-agent-skills)
+- [GitHub Copilot — Adding agent skills](https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/add-skills)

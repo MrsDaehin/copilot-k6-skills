@@ -1,0 +1,7 @@
+{
+  "scenarios": {
+    "smoke": {
+      "executor": "constant-arrival-rate"
+    }
+  }
+}

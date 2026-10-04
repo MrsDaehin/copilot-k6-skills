@@ -1,0 +1,2 @@
+SMOKE := k6 run configs/smoke.json workloads/smoke.js -o experimental-prometheus-rw -e PROMETHEUS_RW_SERVER_URL=http://localhost:9090/api/v1/write
+LOAD  := k6 run configs/load.json workloads/load.js -o experimental-prometheus-rw -e PROMETHEUS_RW_SERVER_URL=http://localhost:9090/api/v1/write

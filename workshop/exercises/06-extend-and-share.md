@@ -1,3 +1,5 @@
+[<- Back to Workshop overview](../../workshop.md)
+
 # Exercise 6: Extend and Share
 
 **Objective:** Extend the skills with custom thresholds and operation tags, configure permissions, mirror skills across agents, and share via Git submodule.

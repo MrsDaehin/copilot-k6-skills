@@ -1,3 +1,5 @@
+[<- Back to Workshop overview](../../workshop.md)
+
 # Exercise 4: MCP for k6 — Script Generation, Validation, and Execution
 
 **Objective:** Use the `mcp-k6` MCP server ([github.com/grafana/mcp-k6](https://github.com/grafana/mcp-k6)) to generate, validate, and run k6 scripts directly from your AI agent — no filesystem workflow required.

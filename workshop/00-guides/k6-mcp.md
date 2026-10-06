@@ -1,3 +1,5 @@
+[<- Back to Workshop overview](../workshop.md)
+
 # 00 — Using the k6 MCP Server
 
 This guide shows how to start **mcp-k6**, Grafana's Model Context Protocol server for k6, connect it to your AI coding assistant, and use it to generate, validate, and run load tests without leaving the chat.

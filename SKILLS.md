@@ -1,3 +1,5 @@
+[<- Back to Workshop overview](workshop.md)
+
 # What is an OpenCode Skill?
 
 An **OpenCode Skill** is a reusable, self-contained instruction definition that tells the AI agent how to perform a specific task. Skills are discovered on-demand and loaded by agents via the native `skill` tool.

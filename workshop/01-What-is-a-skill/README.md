@@ -1,3 +1,5 @@
+[<- Back to Workshop overview](../workshop.md)
+
 # 01 — What Is an Agent Skill?
 
 This guide introduces **Agent Skills** and shows how they connect an AI agent to reusable knowledge, workflows, and supporting resources.

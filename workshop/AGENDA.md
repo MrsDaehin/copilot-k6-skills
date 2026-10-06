@@ -1,3 +1,5 @@
+[<- Back to Workshop overview](../workshop.md)
+
 # Workshop: The Performance Copilot Awakens
 
 ## Teaching AI to Test with k6 Skills and Grafana

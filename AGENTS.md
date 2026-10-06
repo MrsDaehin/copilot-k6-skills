@@ -1,3 +1,5 @@
+[<- Back to Workshop overview](workshop.md)
+
 # AGENTS.md
 
 ## Repository shape

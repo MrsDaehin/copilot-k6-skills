@@ -1,3 +1,5 @@
+[<- Back to Workshop overview](../../workshop.md)
+
 # Exercise 1: Skill Anatomy
 
 **Objective:** Understand the structure of a `SKILL.md` file, how skills are discovered, and how to modify one.

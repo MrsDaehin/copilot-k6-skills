@@ -1,3 +1,5 @@
+[<- Back to Workshop overview](../workshop.md)
+
 # 03 — What Is MCP?
 
 This guide introduces the **Model Context Protocol (MCP)** and explains what we will use it for during this workshop: letting the agent actually *run* k6 and *read* Grafana/Prometheus, not just write files.

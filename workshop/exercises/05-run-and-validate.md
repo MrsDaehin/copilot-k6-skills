@@ -1,3 +1,5 @@
+[<- Back to Workshop overview](../../workshop.md)
+
 # Exercise 5: Run and Validate
 
 **Objective:** Generate a k6 test suite using the skill, run it, and validate the results against Grafana via MCP.

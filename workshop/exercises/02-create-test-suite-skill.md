@@ -1,3 +1,5 @@
+[<- Back to Workshop overview](../../workshop.md)
+
 # Exercise 2: Create the k6 Test Suite Skill
 
 **Objective:** Build a `SKILL.md` that instructs the agent to generate a k6 performance test suite with Prometheus output.

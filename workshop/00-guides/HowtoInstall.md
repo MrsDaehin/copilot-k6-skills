@@ -1,3 +1,5 @@
+[<- Back to Workshop overview](../workshop.md)
+
 # 00 — Installing OpenCode
 
 This guide installs **OpenCode**, the AI coding agent used throughout the workshop, and **k6**, the load testing tool it drives, on Windows and macOS. It then connects OpenCode to a model provider.

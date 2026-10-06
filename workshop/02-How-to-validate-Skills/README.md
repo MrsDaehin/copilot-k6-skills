@@ -1,3 +1,5 @@
+[<- Back to Workshop overview](../workshop.md)
+
 # 02 — How to Validate Agent Skills
 
 **Objective:** Ensure that changes to a skill's `SKILL.md` (or its bundled resources) do not break the behaviour it is meant to enforce. Learn what "evals" mean for Agent Skills, how to write checks, and how to run them in OpenCode and GitHub Copilot.

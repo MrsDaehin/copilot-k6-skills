@@ -1,3 +1,5 @@
+[<- Back to Workshop overview](../../workshop.md)
+
 # Eval suite for k6-test-suite skill
 
 This small eval verifies that `k6-test-suite` generates the expected project structure and conventions after prompt changes.

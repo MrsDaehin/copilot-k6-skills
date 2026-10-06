@@ -1,3 +1,5 @@
+[<- Back to Workshop overview](workshop.md)
+
 # Copilot K6 Skills
 
 A shared repository of reusable AI Agent Skills for k6 performance testing automation and Grafana validation.

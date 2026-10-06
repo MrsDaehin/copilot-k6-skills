@@ -1,3 +1,5 @@
+[<- Back to Workshop overview](../../workshop.md)
+
 # Exercise 3: Grafana Stack Setup
 
 **Objective:** Start a local Prometheus + Grafana stack, configure MCP servers in OpenCode, and verify the connection.

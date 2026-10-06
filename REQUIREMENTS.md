@@ -1,3 +1,5 @@
+[<- Back to Workshop overview](workshop.md)
+
 # Workshop Requirements
 
 ## The Performance Copilot Awakens

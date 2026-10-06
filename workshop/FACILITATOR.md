@@ -1,3 +1,5 @@
+[<- Back to Workshop overview](../workshop.md)
+
 # Facilitator Guide
 
 ## Before the workshop

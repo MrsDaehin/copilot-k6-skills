@@ -1,3 +1,5 @@
+[<- Back to Workshop overview](../workshop.md)
+
 # 00 — Using the Grafana MCP Server
 
 This guide shows how to start **mcp-grafana**, Grafana's Model Context Protocol server, connect it to the local workshop stack, and use it from an AI coding assistant to query dashboards, Prometheus metrics, and the rest of the observability ecosystem.

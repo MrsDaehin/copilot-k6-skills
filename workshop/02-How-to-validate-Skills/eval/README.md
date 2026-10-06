@@ -43,6 +43,8 @@ Keep workspace for debugging:
 .\eval\run_eval.ps1 -KeepWorkspace
 ```
 
+The workspace is kept automatically whenever the assertions fail, so you can inspect what the agent actually generated. `run_eval.ps1` also fails fast if the skill was not staged into the workspace, and warns before asserting when `opencode run` exited before writing the expected files — that means generation was interrupted, not that the skill contract broke.
+
 Copy `.github/skills` mirrors too:
 
 ```powershell

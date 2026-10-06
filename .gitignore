@@ -1,0 +1,12 @@
+# Local secrets: Grafana tokens, API keys. Never commit.
+.env
+.env.local
+.env.*.local
+
+# Keep the placeholder template tracked.
+!.env.example
+
+# Local OpenCode plugin setup.
+.opencode/node_modules/
+.opencode/package.json
+.opencode/package-lock.json

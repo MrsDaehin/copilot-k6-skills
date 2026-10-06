@@ -1,0 +1,58 @@
+{
+  // Copilot / VS Code reads this file. Start the workshop stack first:
+  //   cd workshop/stack && docker-compose up -d
+  //
+  // Grafana runs in Docker, so mcp-grafana cannot use localhost:3000.
+  // It joins the compose network and reaches Grafana by service name.
+  // Check the network name with: docker network ls | findstr workshop
+  //
+  // The image entrypoint hardcodes SSE, so it is overridden to get stdio.
+  "servers": {
+    "grafana": {
+      "type": "stdio",
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "--network",
+        "stack_workshop",
+        "--entrypoint",
+        "/app/mcp-grafana",
+        "-e",
+        "GRAFANA_URL",
+        "-e",
+        "GRAFANA_SERVICE_ACCOUNT_TOKEN",
+        "grafana/mcp-grafana:latest",
+        "--transport",
+        "stdio"
+      ],
+      "env": {
+        "GRAFANA_URL": "http://grafana:3000",
+        "GRAFANA_SERVICE_ACCOUNT_TOKEN": "${input:grafanaServiceAccountToken}"
+      }
+    },
+    "k6": {
+      "type": "stdio",
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "-v",
+        "${workspaceFolder}:/work",
+        "-w",
+        "/work",
+        "grafana/mcp-k6:latest"
+      ]
+    }
+  },
+  "inputs": [
+    {
+      "id": "grafanaServiceAccountToken",
+      "type": "promptString",
+      "description": "Grafana service account token (token value, not the glsa_ name)",
+      "password": true
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "grafana": {
+      "type": "local",
+      "command": [
+        "docker",
+        "run",
+        "-i",
+        "--rm",
+        "--network",
+        "stack_workshop",
+        "--entrypoint",
+        "/app/mcp-grafana",
+        "-e",
+        "GRAFANA_URL",
+        "-e",
+        "GRAFANA_SERVICE_ACCOUNT_TOKEN",
+        "grafana/mcp-grafana:latest",
+        "--transport",
+        "stdio"
+      ],
+      "environment": {
+        "GRAFANA_URL": "http://grafana:3000",
+        "GRAFANA_SERVICE_ACCOUNT_TOKEN": "{env:GRAFANA_SERVICE_ACCOUNT_TOKEN}"
+      },
+      "timeout": 30000
+    },
+    "k6": {
+      "type": "local",
+      "command": [
+        "docker",
+        "run",
+        "-i",
+        "--rm",
+        "-e",
+        "K6_PATH=/usr/bin/k6",
+        "-v",
+        "C:\\Users\\almudena.vivanco\\OneDrive - Schwarz IT\\Documentos 1\\04. Formaciones\\copilot-k6-skills:/work",
+        "-w",
+        "/work",
+        "grafana/mcp-k6:latest"
+      ],
+      "timeout": 30000
+    }
+  }
+}

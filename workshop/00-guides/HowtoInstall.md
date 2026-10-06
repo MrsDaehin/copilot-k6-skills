@@ -1,4 +1,4 @@
-[<- Back to Workshop overview](../workshop.md)
+[<- Back to Workshop overview](../../workshop.md)
 
 # 00 — Installing OpenCode
 

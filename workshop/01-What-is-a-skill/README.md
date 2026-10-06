@@ -1,4 +1,4 @@
-[<- Back to Workshop overview](../workshop.md)
+[<- Back to Workshop overview](../../workshop.md)
 
 # 01 — What Is an Agent Skill?
 

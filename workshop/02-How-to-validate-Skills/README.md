@@ -1,4 +1,4 @@
-[<- Back to Workshop overview](../workshop.md)
+[<- Back to Workshop overview](../../workshop.md)
 
 # 02 — How to Validate Agent Skills
 

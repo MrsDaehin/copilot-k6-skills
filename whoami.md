@@ -2,7 +2,7 @@
 
 **Almudena "Almu" Vivanco**
 
-Principal Performance Engineer, K6 and Grafana Champion, Chaos Enginnering advocate, and international speaker focused on performance testing, observability, and intelligent systems.
+Principal Performance Engineer, K6 and Grafana Champion, Chaos Engineering advocate, and international speaker focused on performance testing, observability, and intelligent systems.
 
 With more than 20 years of experience building and testing large-scale distributed systems, Almu helps organizations adopt modern performance testing practices that leverage k6 and AI for efficient, data-driven validation.
 

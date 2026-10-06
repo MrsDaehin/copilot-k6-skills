@@ -9,6 +9,7 @@ This small eval verifies that `k6-test-suite` generates the expected project str
 - `smoke_prompt.txt` — Canonical prompt used for the smoke test
 - `run_eval.ps1` — Creates an isolated workspace, copies skills, runs `opencode run`, then asserts
 - `assert.ps1` — Structural assertions (dirs, files, executor, tags, Prometheus RW)
+- `assert.py` — Same assertions in Python (stdlib only), for non-Windows or CI use
 - `golden/` — Optional known-good outputs for deeper comparison
 
 ## Prerequisites
@@ -47,6 +48,16 @@ Copy `.github/skills` mirrors too:
 ```powershell
 .\eval\run_eval.ps1 -CopyMirrors -KeepWorkspace
 ```
+
+## Run the assertions in Python
+
+`assert.py` performs the same checks with no dependencies beyond the Python standard library. Pass the generated project directory (defaults to the current directory):
+
+```bash
+python eval/assert.py /path/to/generated/project
+```
+
+It prints the same messages as `assert.ps1` and exits with the number of failed assertions.
 
 ## What it asserts
 
